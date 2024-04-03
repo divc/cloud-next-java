@@ -1,4 +1,7 @@
-package com.winterbe.java8.samples.lambda;
+package com.divc.java8.samples.lambda;
+
+import java.util.concurrent.locks.Condition; // **Change: Import Condition**
+import java.util.concurrent.locks.ReentrantLock; // **Change: Import ReentrantLock**
 
 //https://www.geeksforgeeks.org/why-thread-stop-thread-suspend-and-thread-resume-methods-are-deprecated-after-jdk-1-1-version/?ref=header_search
 
@@ -8,9 +11,13 @@ public class Threading {
 	{
 		NumVal v = new NumVal();
 
+        // **Change: Use ReentrantLock instead of synchronized**
+        ReentrantLock lock = new ReentrantLock();
+        Condition condition = lock.newCondition(); // **Change: Create Condition for signaling/waiting**
+
 		// Creating thread 1 that want exclusive lock on
 		// object referred by v
-		MyThread thread1 = new MyThread("Thread1 ", v);
+		MyThread thread1 = new MyThread("Thread1 ", v, lock, condition);
 
 		// Creating thread 2 that want exclusive lock on
 		// object referred by v
@@ -21,7 +28,7 @@ public class Threading {
 		// referred by v, if lock is not released, thread2
 		// will keep on waiting for thread1 to release lock
 		// onbject referred by v & deadlock will be formed
-		MyThread thread2 = new MyThread("Thread2 ", v);
+		MyThread thread2 = new MyThread("Thread2 ", v, lock, condition);
 
 		// starting both threads
 		thread1.start();
@@ -33,7 +40,7 @@ public class Threading {
 	}
 }
     // This class contains an integer array &
-// Threads set the element's value for this array
+// Threads set the elements value for this array
 class NumVal {
 	private int num[] = null;
 	boolean valueSet = false;
@@ -75,51 +82,56 @@ class MyThread extends Thread {
 	// referred by: NumObjToSetVal
 	NumVal NumObjToSetVal = null;
 
+    // **Change: Use ReentrantLock and Condition for synchronization**
+    private final ReentrantLock lock;
+    private final Condition condition;
+
 	// Constructor
-	public MyThread(String threadName, NumVal numV)
+	public MyThread(String threadName, NumVal numV, ReentrantLock lock, Condition condition)
 	{
 		super(threadName);
 		NumObjToSetVal = numV;
+        this.lock = lock;
+        this.condition = condition;
 	}
 
 	public void run()
 	{
-		// Only 1 thread at a time an access the object
-		// referred by : NumObjToSetVal
-		synchronized (NumObjToSetVal)
-		{
-			int n = 0;
-			while (n < 5) {
-				System.out.println(
-					"THREAD NAME : "
-					+ Thread.currentThread().getName()
+        lock.lock(); // Acquire the lock
+        try {
+            int n = 0;
+            while (n < 5) {
+                System.out.println(
+                    "THREAD NAME : "
+                    + Thread.currentThread().getName()
                     + " THREAD ID : "
                     + Thread.currentThread().getId()); 
-				n++;
-				NumObjToSetVal.setVal(n);
-				try {
-					// Make the thread sleep for 100 ms
-					Thread.sleep(100);
-					System.out.println(
-						Thread.currentThread().getName()
-						+ "is awake now");
-				}
-				catch (Exception e) {
-					System.out.println("Exception Caught");
-				}
-				// If n is 2 , we suspend this thread
-				if (n == 2) {
-					// suspend the thread, now this thread
-					// will release lock on NumObjToSetVal
-					// only when resume() method is called
-					// on this thread, thread will go in
-					// waiting state
-					Thread.currentThread().suspend();
-				}
-                if (n == 3){
-                    Thread.currentThread().stop();
+                n++;
+                NumObjToSetVal.setVal(n);
+                try {
+                    // Make the thread sleep for 100 ms
+                    Thread.sleep(100);
+                    System.out.println(
+                        Thread.currentThread().getName()
+                        + "is awake now");
                 }
-			}
-		}
+                catch (Exception e) {
+                    System.out.println("Exception Caught");
+                }
+                // If n is 2 , we suspend this thread
+                if (n == 2) {
+                    // **Change: Use Condition to signal/wait instead of suspend()**
+                    condition.await(); // Wait for signal
+                }
+                if (n == 3){
+                    // **Change: Interrupt instead of stop()**
+                    Thread.currentThread().interrupt(); 
+                }
+            }
+        } catch (InterruptedException e) {
+            // Handle interruption
+        } finally {
+            lock.unlock(); // Release the lock
+        }
 	}
 }

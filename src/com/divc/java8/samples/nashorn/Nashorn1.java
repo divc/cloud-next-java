@@ -1,6 +1,6 @@
-package com.winterbe.java8.samples.nashorn;
+package com.divc.java8.samples.nashorn;
 
-import com.winterbe.java8.samples.lambda.Person;
+import com.divc.java8.samples.lambda.Person;
 
 import javax.script.Invocable;
 import javax.script.ScriptEngine;

@@ -1,4 +1,4 @@
-package com.winterbe.java8.samples.nashorn;
+package com.divc.java8.samples.nashorn;
 
 import jdk.nashorn.api.scripting.NashornScriptEngine;
 
