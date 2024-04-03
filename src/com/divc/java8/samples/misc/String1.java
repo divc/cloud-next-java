@@ -1,4 +1,4 @@
-package com.divc.java8.samples.misc;
+package com.winterbe.java8.samples.misc;
 
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;

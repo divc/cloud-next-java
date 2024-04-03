@@ -1,4 +1,4 @@
-package com.divc.java8.samples.stream;
+package com.winterbe.java8.samples.stream;
 
 import java.util.Optional;
 import java.util.function.Supplier;

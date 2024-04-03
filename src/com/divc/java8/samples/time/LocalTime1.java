@@ -1,4 +1,4 @@
-package com.divc.java8.samples.time;
+package com.winterbe.java8.samples.time;
 
 import java.time.Clock;
 import java.time.Instant;
