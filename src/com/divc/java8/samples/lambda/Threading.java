@@ -1,4 +1,4 @@
-package com.winterbe.java8.samples.lambda;
+package com.divc.java8.samples.lambda;
 
 //https://www.geeksforgeeks.org/why-thread-stop-thread-suspend-and-thread-resume-methods-are-deprecated-after-jdk-1-1-version/?ref=header_search
 
@@ -92,9 +92,7 @@ class MyThread extends Thread {
 			while (n < 5) {
 				System.out.println(
 					"THREAD NAME : "
-					+ Thread.currentThread().getName()
-                    + " THREAD ID : "
-                    + Thread.currentThread().getId()); 
+					+ Thread.currentThread().getName()); 
 				n++;
 				NumObjToSetVal.setVal(n);
 				try {

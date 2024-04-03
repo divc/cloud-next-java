@@ -1,4 +1,4 @@
-package com.winterbe.java8.samples.lambda;
+package com.divc.java8.samples.lambda;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -23,9 +23,9 @@ public class Lambda1 {
 
     public static void main(String[] args) {
 
-        Date cloudNextDate = new Date(2024, 03, 9); 
+        Date cloudNextDate = new Date(2024, 04, 9); 
         
-        List<String> presentors = Arrays.asList("Gabe", "Aja", "Aaron", "Ning");
+        List<String> presentors = Arrays.asList("Marcos", "Christian", "Div");
 
         // Use List.sort with lambda expression
         presentors.sort((a, b) -> b.compareTo(a));

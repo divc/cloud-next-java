@@ -1,4 +1,4 @@
-package com.winterbe.java8.samples.concurrent;
+package com.divc.java8.samples.concurrent;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
